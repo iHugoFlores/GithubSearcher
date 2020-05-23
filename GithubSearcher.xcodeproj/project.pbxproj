@@ -52,13 +52,61 @@
 		F08F18C924786397005AA11A /* GithubSearcher */ = {
 			isa = PBXGroup;
 			children = (
+				F0FFCD4B2479959600FB8ECF /* Assets */,
+				F0FFCD4A2479958C00FB8ECF /* Supporting Files */,
+				F0FFCD4924798F6D00FB8ECF /* View Models */,
+				F0FFCD4824798F6800FB8ECF /* Views */,
+				F0FFCD4724798F5E00FB8ECF /* Models */,
 				F08F18CA24786397005AA11A /* AppDelegate.swift */,
 				F08F18CE24786397005AA11A /* ViewController.swift */,
-				F08F18D324786399005AA11A /* Assets.xcassets */,
 				F08F18D524786399005AA11A /* LaunchScreen.storyboard */,
-				F08F18D824786399005AA11A /* Info.plist */,
 			);
 			path = GithubSearcher;
+			sourceTree = "<group>";
+		};
+		F0FFCD4724798F5E00FB8ECF /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				F0FFCD4C2479980500FB8ECF /* Mocks */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		F0FFCD4824798F6800FB8ECF /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F0FFCD4924798F6D00FB8ECF /* View Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "View Models";
+			sourceTree = "<group>";
+		};
+		F0FFCD4A2479958C00FB8ECF /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				F08F18D824786399005AA11A /* Info.plist */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		F0FFCD4B2479959600FB8ECF /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				F08F18D324786399005AA11A /* Assets.xcassets */,
+			);
+			path = Assets;
+			sourceTree = "<group>";
+		};
+		F0FFCD4C2479980500FB8ECF /* Mocks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Mocks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -269,7 +317,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = GithubSearcher/Info.plist;
+				INFOPLIST_FILE = "GithubSearcher/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -286,7 +334,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = GithubSearcher/Info.plist;
+				INFOPLIST_FILE = "GithubSearcher/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
