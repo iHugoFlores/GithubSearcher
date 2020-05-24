@@ -14,8 +14,9 @@ class UserSearchViewModel {
 
     private var usersResponse: UsersResponse? {
         didSet {
-            print("Data fetched")
             isDataDownloading = false
+            guard let handler = reloadTableHandler else { return }
+            handler()
         }
     }
 
@@ -30,6 +31,7 @@ class UserSearchViewModel {
                 isDataDownloading = false
                 displayMessage = noQueryMessage
                 userQuery = nil
+                usersResponse = nil
                 return
             }
             isDataDownloading = true
@@ -46,6 +48,7 @@ class UserSearchViewModel {
 
     private var isDataDownloading: Bool = false {
         didSet {
+            if oldValue == isDataDownloading { return }
             guard let handler = setActivityIndicatorHandler else { return }
             handler(isDataDownloading)
         }
@@ -53,6 +56,7 @@ class UserSearchViewModel {
 
     var setScreenMessageHandler: ((String?) -> Void)?
     var setActivityIndicatorHandler: ((Bool) -> Void)?
+    var reloadTableHandler: (() -> Void)?
 
     func setNewQuery(query: String) {
         userQuery = query
@@ -70,5 +74,9 @@ class UserSearchViewModel {
                 }
             }
         }
+    }
+    
+    func getNumberOfUsers() -> Int {
+        return usersResponse?.items.count ?? 0
     }
 }
