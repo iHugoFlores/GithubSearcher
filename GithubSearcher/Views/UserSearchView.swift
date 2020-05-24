@@ -15,16 +15,21 @@ class UserSearchView: UIViewController {
     private let searchBar: UISearchBar = {
         let bar = UISearchBar()
         bar.placeholder = "Search for Users"
+        bar.setContentHuggingPriority(.required, for: .vertical)
         return bar
     }()
     
     private let tableView: UITableView = {
         let table = UITableView()
+        table.translatesAutoresizingMaskIntoConstraints = false
         table.tableFooterView = UIView()
         table.estimatedRowHeight = 10
         table.rowHeight = UITableView.automaticDimension
         return table
     }()
+    
+    private var tableBottomConstraint: NSLayoutConstraint?
+    private var tableBottomKeyboardConstraint: NSLayoutConstraint?
     
     private let spinner = UIActivityIndicatorView(style: .large)
     
@@ -55,6 +60,7 @@ class UserSearchView: UIViewController {
         title = "Github Searcher"
         view.backgroundColor = .white
         setUpViews()
+        setUpNotifications()
     }
     
     private func setUpViews() {
@@ -70,8 +76,36 @@ class UserSearchView: UIViewController {
     private func setUpTable() {
         tableView.dataSource = self
         tableView.register(UserSearchTableCellView.self, forCellReuseIdentifier: UserSearchTableCellView.reuseIdentifier)
-        tableView.addToAndFill(parent: view, belowOf: searchBar)
+        view.addSubview(tableView)
+        tableView.topAnchor.constraint(equalTo: searchBar.bottomAnchor).isActive = true
+        tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        tableBottomConstraint = tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        tableBottomConstraint?.isActive = true
         displayOnTable(message: viewModel.noQueryMessage)
+    }
+    
+    private func setUpNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(adjustForKeyboard(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(adjustForKeyboard(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+    }
+    
+    @objc private func adjustForKeyboard(notification: NSNotification) {
+        if notification.name == UIResponder.keyboardWillShowNotification,
+           let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            tableBottomConstraint?.constant = -keyboardSize.height
+        } else {
+            tableBottomConstraint?.constant = 0
+        }
+        
+        UIView.animate(
+            withDuration: 0.33,
+            delay: 0.0,
+            options: .curveEaseIn,
+            animations: {
+                self.view.layoutIfNeeded()
+        },
+            completion: nil)
     }
     
     @objc private func executeNewSearch() {
@@ -80,7 +114,6 @@ class UserSearchView: UIViewController {
     
     private func displayOnTable(message: String?) {
         guard let message = message else {
-            // tableView.separatorStyle = .singleLine
             tableView.backgroundView = nil
             return
         }
@@ -96,13 +129,27 @@ class UserSearchView: UIViewController {
     private func setActivityIndicatorState(isShowing: Bool) {
         if isShowing {
             spinner.addToAndFill(parent: spinnerView)
-            spinnerView.addToParentAndFillChild(parent: view, child: tableView)
             spinner.startAnimating()
+            UIView.transition(
+                with: view,
+                duration: 0.33,
+                options: .transitionCrossDissolve,
+                animations: {
+                    self.spinnerView.addToParentAndFillChild(parent: self.view, child: self.tableView)
+            },
+                completion: nil)
             return
         }
         spinner.stopAnimating()
         spinner.removeFromSuperview()
-        spinnerView.removeFromSuperview()
+        UIView.transition(
+            with: view,
+            duration: 0.33,
+            options: .transitionCrossDissolve,
+            animations: {
+                self.spinnerView.removeFromSuperview()
+        },
+            completion: nil)
     }
     
     private func reloadTableData() {
