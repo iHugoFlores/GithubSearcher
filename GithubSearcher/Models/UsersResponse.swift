@@ -18,8 +18,14 @@ struct UsersResponse: Codable {
         case totalCount = "total_count"
         case incompleteResults = "incomplete_results"
     }
+}
 
-    static func loadDummyResponse() -> Self {
-        return JSONUtil.load(name: "UsersResponse")
+extension UsersResponse {
+    typealias Completion = (Result<Self, Error>) -> Void
+    static func loadDummyResponse(callback: @escaping Completion) {
+        DispatchQueue.global().asyncAfter(deadline: .now() + 1.0) {
+            let data: Self = JSONUtil.load(name: "UsersResponse")
+            callback(Result.success(data))
+        }
     }
 }
