@@ -15,7 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
-        let viewModel = UserSearchViewModel()
+        let viewModel = UserSearchViewModel(networkHandler: NetworkEngine())
         window?.rootViewController = UINavigationController(rootViewController: UserSearchView(viewModel: viewModel))
         window?.makeKeyAndVisible()
         return true
