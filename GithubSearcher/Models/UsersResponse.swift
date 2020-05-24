@@ -21,9 +21,9 @@ struct UsersResponse: Codable {
 }
 
 extension UsersResponse {
-    typealias Completion = (Result<Self, Error>) -> Void
+    typealias Completion = (Result<Self, NetworkError>) -> Void
     static func loadDummyResponse(callback: @escaping Completion) {
-        DispatchQueue.global().asyncAfter(deadline: .now() + 1.0) {
+        DispatchQueue.global().asyncAfter(deadline: .now() + 0.2) {
             let data: Self = JSONUtil.load(name: "UsersResponse")
             callback(Result.success(data))
         }
