@@ -25,4 +25,22 @@ extension UIView {
         self.topAnchor.constraint(equalTo: reference.bottomAnchor).isActive = true
         self.bottomAnchor.constraint(equalTo: parent.bottomAnchor).isActive = true
     }
+
+    func addToAndFill(parent: UIView) {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        parent.addSubview(self)
+        self.trailingAnchor.constraint(equalTo: parent.trailingAnchor).isActive = true
+        self.leadingAnchor.constraint(equalTo: parent.leadingAnchor).isActive = true
+        self.topAnchor.constraint(equalTo: parent.topAnchor).isActive = true
+        self.bottomAnchor.constraint(equalTo: parent.bottomAnchor).isActive = true
+    }
+
+    func addToParentAndFillChild(parent: UIView, child: UIView) {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        parent.addSubview(self)
+        self.trailingAnchor.constraint(equalTo: child.trailingAnchor).isActive = true
+        self.leadingAnchor.constraint(equalTo: child.leadingAnchor).isActive = true
+        self.topAnchor.constraint(equalTo: child.topAnchor).isActive = true
+        self.bottomAnchor.constraint(equalTo: child.bottomAnchor).isActive = true
+    }
 }
