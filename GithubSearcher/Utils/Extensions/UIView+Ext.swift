@@ -43,4 +43,10 @@ extension UIView {
         self.topAnchor.constraint(equalTo: child.topAnchor).isActive = true
         self.bottomAnchor.constraint(equalTo: child.bottomAnchor).isActive = true
     }
+    
+    func constraintTo(width: CGFloat, height: CGFloat) {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.widthAnchor.constraint(equalToConstant: width).isActive = true
+        self.heightAnchor.constraint(equalToConstant: height).isActive = true
+    }
 }
