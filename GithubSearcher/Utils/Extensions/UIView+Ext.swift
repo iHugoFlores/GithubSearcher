@@ -47,6 +47,8 @@ extension UIView {
     func constraintTo(width: CGFloat, height: CGFloat) {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.widthAnchor.constraint(equalToConstant: width).isActive = true
-        self.heightAnchor.constraint(equalToConstant: height).isActive = true
+        let heightConstraint = self.heightAnchor.constraint(equalToConstant: height)
+        heightConstraint.priority = UILayoutPriority(99)
+        heightConstraint.isActive = true
     }
 }
