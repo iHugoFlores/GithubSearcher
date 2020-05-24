@@ -20,6 +20,9 @@ class UserSearchView: UIViewController {
     
     private let tableView: UITableView = {
         let table = UITableView()
+        table.tableFooterView = UIView()
+        table.estimatedRowHeight = 10
+        table.rowHeight = UITableView.automaticDimension
         return table
     }()
     
@@ -40,6 +43,7 @@ class UserSearchView: UIViewController {
     func setUpDataBinding() {
         viewModel.setScreenMessageHandler = displayOnTable
         viewModel.setActivityIndicatorHandler = setActivityIndicatorState
+        viewModel.reloadTableHandler = reloadTableData
     }
 
     required init?(coder: NSCoder) {
@@ -64,6 +68,8 @@ class UserSearchView: UIViewController {
     }
     
     private func setUpTable() {
+        tableView.dataSource = self
+        tableView.register(UserSearchTableCellView.self, forCellReuseIdentifier: UserSearchTableCellView.reuseIdentifier)
         tableView.addToAndFill(parent: view, belowOf: searchBar)
         displayOnTable(message: viewModel.noQueryMessage)
     }
@@ -98,6 +104,11 @@ class UserSearchView: UIViewController {
         spinner.removeFromSuperview()
         spinnerView.removeFromSuperview()
     }
+    
+    private func reloadTableData() {
+        tableView.separatorStyle = .singleLine
+        tableView.reloadData()
+    }
 }
 
 extension UserSearchView: UISearchBarDelegate {
@@ -105,5 +116,18 @@ extension UserSearchView: UISearchBarDelegate {
         viewModel.setNewQuery(query: searchText)
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(executeNewSearch), object: nil)
         perform(#selector(executeNewSearch), with: nil, afterDelay: 0.4)
+    }
+}
+
+extension UserSearchView: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return viewModel.getNumberOfUsers()
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: UserSearchTableCellView.reuseIdentifier, for: indexPath) as! UserSearchTableCellView
+        let cellViewModel = viewModel.getUserViewModelAt(indexPath: indexPath)
+        cell.setUp(viewModel: cellViewModel)
+        return cell
     }
 }
