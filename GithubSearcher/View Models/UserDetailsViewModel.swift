@@ -72,7 +72,7 @@ class UserDetailsViewModel {
     var setActivityIndicatorHandler: ((Bool) -> Void)?
     var setScreenMessageHandler: ((String?) -> Void)?
     var reloadTableHandler: (() -> Void)?
-    var presentAlertHandler: ((String, String) -> Void)?
+    var presentAlertHandler: ((String, String, String, (() -> Void)?) -> Void)?
     
     init(networkHandler: NetworkProtocol, userDetails: UserDetails, avatar: Data) {
         networkManager = NetworkManager(networkHandler: networkHandler)
@@ -137,11 +137,18 @@ class UserDetailsViewModel {
                 switch result {
                 case .success(let data):
                     self?.repos += (self?.parseResponseToRepositoryCell(userRepositories: data))!
-                case .failure(let error):
-                    print("User repo get user repo error", error)
+                case .failure:
+                    self?.onAPILimitReached()
                 }
             }
         }
+    }
+    
+    private func onAPILimitReached() {
+        isDataDownloading = false
+        guard let handler = presentAlertHandler else { return }
+        handler("Download error", "An error has occurred while getting the user repos. Maybe you reched the limit of calls", "Ok", nil)
+        displayMessage = "Download Error"
     }
     
     private func parseResponseToRepositoryCell(userRepositories: [UserRepository]) -> [RepositoryCell] {
@@ -175,7 +182,7 @@ class UserDetailsViewModel {
     func displayAPIInfo() {
         guard let handler = presentAlertHandler else { return }
         guard let response = previousResponseMeta else {
-            handler("Make a search", "Start using the application to retrieve information about the API")
+            handler("Make a search", "Start using the application to retrieve information about the API", "Ok", nil)
             return
         }
         
@@ -186,7 +193,7 @@ class UserDetailsViewModel {
         let resetTime = formatter.string(from: resetDate)
         
         let body = "Call Limit: \(response.rateLimit)\nRemaining Calls: \(response.remaining)\nReset Time: \(resetTime)"
-        handler("Latest API Limits", body)
+        handler("Latest API Limits", body, "Ok", nil)
     }
     
     func getInitialScreenMessage() -> String {

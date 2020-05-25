@@ -51,6 +51,7 @@ class UserDetailsView: UIViewController {
         let bar = UISearchBar()
         bar.placeholder = "Search for User's Repositories"
         bar.setContentHuggingPriority(.required, for: .vertical)
+        bar.returnKeyType = .done
         return bar
     }()
     
@@ -184,10 +185,13 @@ class UserDetailsView: UIViewController {
         let repoViewModel = viewModel.getRepoViewModelAt(indexPath: indexPath)
         repoViewModel.navigateToWebRepo(navigationController: navigationController)
     }
-    
-    private func displayAlert(title: String, message: String) {
+
+    private func displayAlert(title: String, message: String, buttonMessage: String, callback: (() -> Void)?) {
+        let handler = { (action: UIAlertAction) in
+            if let callback = callback { callback() }
+        }
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: buttonMessage, style: .default, handler: handler))
         navigationController?.present(alert, animated: true, completion: nil)
     }
 }
@@ -197,6 +201,10 @@ extension UserDetailsView: UISearchBarDelegate {
         viewModel.setNewQuery(query: searchText)
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(executeNewSearch), object: nil)
         perform(#selector(executeNewSearch), with: nil, afterDelay: 0.4)
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.endEditing(true)
     }
 }
 
