@@ -22,10 +22,38 @@ struct UsersResponse: Codable {
 
 extension UsersResponse {
     typealias Completion = (Result<Self, NetworkError>) -> Void
+    typealias CompletionWithResponse = (Result<Self, NetworkError>, HTTPURLResponse?) -> Void
+    static let pageSize = 100
+    private static let endpoint: URL = {
+        var urlC = URLComponents()
+        urlC.scheme = "https"
+        urlC.host = "api.github.com"
+        urlC.path = "/search/users"
+        return urlC.url!
+    }()
+    
     static func loadDummyResponse(callback: @escaping Completion) {
         DispatchQueue.global().asyncAfter(deadline: .now() + 0.2) {
             let data: Self = JSONUtil.load(name: "UsersResponse")
             callback(Result.success(data))
         }
+    }
+    
+    static func getUsers(networkManager: NetworkManager, query: String, page: Int, callback: @escaping CompletionWithResponse) {
+        guard var urlComp = URLComponents(url: endpoint, resolvingAgainstBaseURL: true) else { return }
+        urlComp.queryItems = Self.getQueryParameters(query: query, page: page)
+        print(urlComp)
+        guard let url = urlComp.url else { return }
+        networkManager.getRESTDataFrom(url: url) { (result: Result<Self, NetworkError>, response) in
+            callback(result, response)
+        }
+    }
+    
+    private static func getQueryParameters(query: String, page: Int) -> [URLQueryItem] {
+        return [
+            URLQueryItem(name: "q", value: query),
+            URLQueryItem(name: "page", value: String(page)),
+            URLQueryItem(name: "per_page", value: String(pageSize))
+        ]
     }
 }
