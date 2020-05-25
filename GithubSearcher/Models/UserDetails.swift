@@ -21,11 +21,10 @@ struct UserDetails: Codable {
     let receivedEventsURL: String
     let type: String
     let siteAdmin: Bool
-    let name, company: String
-    let blog: String
-    let location, email: String
-    let hireable: Bool
-    let bio: String
+    let name, blog: String
+    let location, email, company: String?
+    let hireable: Bool?
+    let bio: String?
     let publicRepos, publicGists, followers, following: Int
     let createdAt, updatedAt: String
 
