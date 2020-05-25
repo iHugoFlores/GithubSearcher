@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import UIKit.UINavigationController
 
 class RepositoryCell {
     private let repository: UserRepository
@@ -21,5 +22,11 @@ class RepositoryCell {
     
     func getForksAndStarts() -> String {
         return "\(repository.forksCount) Forks\n\(repository.stargazersCount) Stars"
+    }
+    
+    func navigateToWebRepo(navigationController: UINavigationController?) {
+        guard let url = URL(string: repository.htmlURL) else { return }
+        let newView = WebView(request: URLRequest(url: url))
+        navigationController?.pushViewController(newView, animated: true)
     }
 }

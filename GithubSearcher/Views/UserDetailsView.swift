@@ -114,6 +114,7 @@ class UserDetailsView: UIViewController {
     }
     
     private func setUpTable() {
+        tableView.delegate = self
         tableView.dataSource = self
         tableView.register(RepositoryTableCellView.self, forCellReuseIdentifier: RepositoryTableCellView.reuseIdentifier)
         tableView.addToAndFill(parent: view, belowOf: searchBar)
@@ -172,6 +173,11 @@ class UserDetailsView: UIViewController {
     @objc private func executeNewSearch() {
         viewModel.getNewData()
     }
+    
+    private func onCellPressed(indexPath: IndexPath) {
+        let repoViewModel = viewModel.getRepoViewModelAt(indexPath: indexPath)
+        repoViewModel.navigateToWebRepo(navigationController: navigationController)
+    }
 }
 
 extension UserDetailsView: UISearchBarDelegate {
@@ -192,5 +198,12 @@ extension UserDetailsView: UITableViewDataSource {
         let repoViewModel = viewModel.getRepoViewModelAt(indexPath: indexPath)
         cell.setUp(viewModel: repoViewModel)
         return cell
+    }
+}
+
+extension UserDetailsView: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        onCellPressed(indexPath: indexPath)
     }
 }
