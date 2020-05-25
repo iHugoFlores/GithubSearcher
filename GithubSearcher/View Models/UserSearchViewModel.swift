@@ -15,7 +15,7 @@ class UserSearchViewModel {
     
     private let networkManager: NetworkManager!
     
-    private let userDetailsSemaphore = DispatchSemaphore(value: 0)
+    // private let userDetailsSemaphore = DispatchSemaphore(value: 0)
     private var cachedImages = NSCache<NSString, NSData>()
     private var cachedUserDetails = NSCache<NSString, NSString>()
     
@@ -87,8 +87,8 @@ class UserSearchViewModel {
     func getNewData() {
         guard let query = userQuery else { return }
         UsersResponse.getUsers(networkManager: networkManager, query: query, page: currentPage) { (result, response) in
+            self.previousResponseMeta = APIResponse(headers: response?.allHeaderFields)
             DispatchQueue.main.async {
-                self.previousResponseMeta = APIResponse(headers: response?.allHeaderFields)
                 switch result {
                 case .success(let data):
                     self.maxNumberOfUsers = data.totalCount
@@ -179,9 +179,9 @@ class UserSearchViewModel {
                 self?.cachedUserDetails.setObject(userJSON, forKey: key)
             default: break
             }
-            self?.userDetailsSemaphore.signal()
+            // self?.userDetailsSemaphore.signal()
         }
-        self.userDetailsSemaphore.wait()
+        // self.userDetailsSemaphore.wait()
     }
     
     func displayAPIInfo() {

@@ -116,6 +116,7 @@ class UserSearchTableCellView: UITableViewCell {
     }
     
     private func setErrorIndicator() {
+        if mainContainer.arrangedSubviews.count > 2 { return }
         let image = UIImageView(image: UIImage(systemName: "xmark.circle"))
         image.tintColor = .systemRed
         image.contentMode = .scaleAspectFit
