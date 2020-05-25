@@ -17,6 +17,11 @@ class UserSearchViewModel {
     private var cachedImages = NSCache<NSString, NSData>()
     private var cachedUserDetails = NSCache<NSString, NSString>()
     
+    private var currentPage = 1
+    private var maxNumberOfUsers = 0
+    
+    private var previousResponseMeta: APIResponse?
+    
     private var users: [UserCell] = [] {
         didSet {
             isDataDownloading = false
@@ -32,11 +37,13 @@ class UserSearchViewModel {
                 displayMessage = noQueryMessage
                 return
             }
+            users = []
+            maxNumberOfUsers = 0
             if value.isEmpty {
                 isDataDownloading = false
                 displayMessage = noQueryMessage
                 userQuery = nil
-                users = []
+                maxNumberOfUsers = 0
                 return
             }
             isDataDownloading = true
@@ -62,6 +69,7 @@ class UserSearchViewModel {
     var setScreenMessageHandler: ((String?) -> Void)?
     var setActivityIndicatorHandler: ((Bool) -> Void)?
     var reloadTableHandler: (() -> Void)?
+    var presentAlertHandler: ((String, String) -> Void)?
     
     init(networkHandler: NetworkProtocol) {
         networkManager = NetworkManager(networkHandler: networkHandler)
@@ -72,17 +80,31 @@ class UserSearchViewModel {
     }
 
     func getNewData() {
-        if userQuery == nil { return }
-        UsersResponse.loadDummyResponse { [unowned self] (result) in
+        guard let query = userQuery else { return }
+        UsersResponse.getUsers(networkManager: networkManager, query: "kalicody", page: currentPage) { (result, response) in
             DispatchQueue.main.async {
+                self.previousResponseMeta = APIResponse(headers: response?.allHeaderFields)
                 switch result {
                 case .success(let data):
-                    self.users = self.parseResponseToUserCell(usersResponse: data)
+                    self.maxNumberOfUsers = data.totalCount
+                    self.users += self.parseResponseToUserCell(usersResponse: data)
                 case .failure(let error):
                     print(error)
                 }
             }
         }
+    }
+    
+    func checkForNewPage(indexPath: IndexPath) {
+        if indexPath.row < users.count - 1 { return }
+        getNewPage()
+    }
+    
+    func getNewPage() {
+        if users.count >= maxNumberOfUsers || isDataDownloading { return }
+        isDataDownloading = true
+        currentPage += 1
+        getNewData()
     }
 
     private func parseResponseToUserCell(usersResponse: UsersResponse) -> [UserCell] {
@@ -107,7 +129,7 @@ class UserSearchViewModel {
             completion(cachedData as Data)
             return
         }
-        networkManager.getDataFrom(url: url) { [unowned self] (result) in
+        networkManager.getDataFrom(url: url) { [unowned self] (result, _) in
             switch result {
             case .success(let imgData):
                 completion(imgData)
@@ -134,5 +156,22 @@ class UserSearchViewModel {
             default: break
             }
         }
+    }
+    
+    func displayAPIInfo() {
+        guard let handler = presentAlertHandler else { return }
+        guard let response = previousResponseMeta else {
+            handler("Make a search", "Start using the application to retrieve information about the API")
+            return
+        }
+        
+        let resetDate = Date(timeIntervalSince1970: response.rateReset)
+        let formatter = DateFormatter()
+        formatter.dateStyle = .none
+        formatter.timeStyle = .medium
+        let resetTime = formatter.string(from: resetDate)
+        
+        let body = "Call Limit: \(response.rateLimit)\nRemaining Calls: \(response.remaining)\nReset Time: \(resetTime)"
+        handler("Latest API Limits", body)
     }
 }
