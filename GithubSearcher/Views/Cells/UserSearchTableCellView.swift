@@ -84,7 +84,6 @@ class UserSearchTableCellView: UITableViewCell {
     
     private func setInitialValues() {
         nameLabel.text = viewModel?.getUserName()
-        //spinner.startAnimating()
     }
     
     private func setAvatarImage(imageData: Data) {
