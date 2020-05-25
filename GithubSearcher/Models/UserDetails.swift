@@ -53,12 +53,12 @@ struct UserDetails: Codable {
 extension UserDetails {
     typealias Completion = (Result<Self, NetworkError>) -> Void
     typealias CompletionWithResponse = (Result<Self, NetworkError>, HTTPURLResponse?) -> Void
-    private static var endpointComponent: URLComponents = {
+    private static var endpoint: URL = {
         var urlC = URLComponents()
         urlC.scheme = "https"
         urlC.host = "api.github.com"
         urlC.path = "/users"
-        return urlC
+        return urlC.url!
     }()
 
     static func loadDummyResponse(callback: @escaping Completion) {
@@ -69,8 +69,15 @@ extension UserDetails {
     }
     
     static func getUserDetails(networkManager: NetworkManager, user: String, callback: @escaping CompletionWithResponse) {
-        endpointComponent.path += "/\(user)"
-        guard let url = endpointComponent.url else { return }
+        /*
+        DispatchQueue.global().async {
+            let data: Self = JSONUtil.load(name: "UserDetails")
+            callback(Result.success(data), HTTPURLResponse())
+        }
+        */
+        guard var urlC = URLComponents(url: endpoint, resolvingAgainstBaseURL: true) else { return }
+        urlC.path += "/\(user)"
+        guard let url = urlC.url else { return }
         networkManager.getRESTDataFrom(url: url) { (result: Result<Self, NetworkError>, response) in
             callback(result, response)
         }

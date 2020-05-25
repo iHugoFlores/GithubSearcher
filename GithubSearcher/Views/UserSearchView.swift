@@ -16,6 +16,7 @@ class UserSearchView: UIViewController {
         let bar = UISearchBar()
         bar.placeholder = "Search for Users"
         bar.setContentHuggingPriority(.required, for: .vertical)
+        bar.returnKeyType = .done
         return bar
     }()
     
@@ -164,9 +165,12 @@ class UserSearchView: UIViewController {
         tableView.reloadData()
     }
     
-    private func displayAlert(title: String, message: String) {
+    private func displayAlert(title: String, message: String, buttonMessage: String, callback: (() -> Void)?) {
+        let handler = { (action: UIAlertAction) in
+            if let callback = callback { callback() }
+        }
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: buttonMessage, style: .default, handler: handler))
         navigationController?.present(alert, animated: true, completion: nil)
     }
 }
@@ -176,6 +180,10 @@ extension UserSearchView: UISearchBarDelegate {
         viewModel.setNewQuery(query: searchText)
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(executeNewSearch), object: nil)
         perform(#selector(executeNewSearch), with: nil, afterDelay: 0.5)
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.endEditing(true)
     }
 }
 
@@ -187,6 +195,7 @@ extension UserSearchView: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: UserSearchTableCellView.reuseIdentifier, for: indexPath) as! UserSearchTableCellView
         let cellViewModel = viewModel.getUserViewModelAt(indexPath: indexPath)
+        cellViewModel.presentAlertHandler = displayAlert
         cell.setUp(viewModel: cellViewModel)
         viewModel.checkForNewPage(indexPath: indexPath)
         return cell

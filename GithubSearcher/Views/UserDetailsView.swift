@@ -86,6 +86,7 @@ class UserDetailsView: UIViewController {
         viewModel.setActivityIndicatorHandler = setActivityIndicatorState
         viewModel.setScreenMessageHandler = displayOnTable
         viewModel.reloadTableHandler = reloadTableData
+        viewModel.presentAlertHandler = displayAlert
     }
     
     override func viewDidLoad() {
@@ -93,8 +94,13 @@ class UserDetailsView: UIViewController {
         view.backgroundColor = .systemBackground
         title = "Github Searcher"
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "info.circle"), style: .plain, target: self, action: #selector(onInfoPressed))
         setUpViews()
         setUpInitData()
+    }
+    
+    @objc private func onInfoPressed() {
+        viewModel.displayAPIInfo()
     }
     
     private func setUpViews() {
@@ -124,7 +130,7 @@ class UserDetailsView: UIViewController {
         userImage.image = UIImage(data: viewModel.getUserAvatar())
         userDataLabel.attributedText = viewModel.getUserDescription()
         biograpgyLabel.text = viewModel.getUserBiography()
-        displayOnTable(message: viewModel.noQueryMessage)
+        displayOnTable(message: viewModel.getInitialScreenMessage())
     }
     
     private func displayOnTable(message: String?) {
@@ -177,6 +183,12 @@ class UserDetailsView: UIViewController {
     private func onCellPressed(indexPath: IndexPath) {
         let repoViewModel = viewModel.getRepoViewModelAt(indexPath: indexPath)
         repoViewModel.navigateToWebRepo(navigationController: navigationController)
+    }
+    
+    private func displayAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        navigationController?.present(alert, animated: true, completion: nil)
     }
 }
 

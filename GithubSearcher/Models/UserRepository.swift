@@ -46,7 +46,6 @@ extension UserRepository {
         urlC.path += "/\(user)/repos"
         urlC.queryItems = Self.getQueryParameters(page: page)
         guard let url = urlC.url else { return }
-        print(url)
         networkManager.getRESTDataFrom(url: url) { (result: Result<[Self], NetworkError>, response) in
             callback(result, response)
         }

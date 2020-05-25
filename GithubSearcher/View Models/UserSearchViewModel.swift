@@ -11,6 +11,7 @@ import Foundation
 class UserSearchViewModel {
 
     let noQueryMessage = "Type on the search bar to get users"
+    private let noUsersFoundMessage = "No Users Found"
     
     private let networkManager: NetworkManager!
     
@@ -28,6 +29,11 @@ class UserSearchViewModel {
             isDataDownloading = false
             guard let handler = reloadTableHandler else { return }
             handler()
+            if users.isEmpty {
+                maxNumberOfUsers = 0
+                currentPage = 1
+                displayMessage = noUsersFoundMessage
+            }
         }
     }
 
@@ -39,12 +45,10 @@ class UserSearchViewModel {
                 return
             }
             users = []
-            maxNumberOfUsers = 0
             if value.isEmpty {
                 isDataDownloading = false
                 displayMessage = noQueryMessage
                 userQuery = nil
-                maxNumberOfUsers = 0
                 return
             }
             isDataDownloading = true
@@ -70,7 +74,7 @@ class UserSearchViewModel {
     var setScreenMessageHandler: ((String?) -> Void)?
     var setActivityIndicatorHandler: ((Bool) -> Void)?
     var reloadTableHandler: (() -> Void)?
-    var presentAlertHandler: ((String, String) -> Void)?
+    var presentAlertHandler: ((String, String, String, (() -> Void)?) -> Void)?
     
     init(networkHandler: NetworkProtocol) {
         networkManager = NetworkManager(networkHandler: networkHandler)
@@ -82,7 +86,7 @@ class UserSearchViewModel {
 
     func getNewData() {
         guard let query = userQuery else { return }
-        UsersResponse.getUsers(networkManager: networkManager, query: "kalicody1269", page: currentPage) { (result, response) in
+        UsersResponse.getUsers(networkManager: networkManager, query: query, page: currentPage) { (result, response) in
             DispatchQueue.main.async {
                 self.previousResponseMeta = APIResponse(headers: response?.allHeaderFields)
                 switch result {
@@ -90,10 +94,28 @@ class UserSearchViewModel {
                     self.maxNumberOfUsers = data.totalCount
                     self.users += self.parseResponseToUserCell(usersResponse: data)
                 case .failure(let error):
-                    print(error)
+                    self.isDataDownloading = false
+                    switch error {
+                    case .deviceOffline:
+                        self.displayAlertMessage(title: "Connection Error", body: "The device is offline. Connect to a network and try again", buttonMsg: "Try Again", callback: self.reTryNewDataDownload)
+                    case .rateLimitReached:
+                        self.onAPILimitReached()
+                    default:
+                        self.displayAlertMessage(title: "Unexpected Error", body: "An unexpected error has ocurred", buttonMsg: "Try Again", callback: self.reTryNewDataDownload)
+                    }
                 }
             }
         }
+    }
+    
+    private func onAPILimitReached() {
+        self.displayAlertMessage(title: "Requests Limit reached", body: "The API Request Limit has been reached. Press the information button to see the reset time", buttonMsg: "Ok")
+        userQuery = ""
+    }
+    
+    private func reTryNewDataDownload() {
+        isDataDownloading = true
+        getNewData()
     }
     
     func checkForNewPage(indexPath: IndexPath) {
@@ -163,9 +185,8 @@ class UserSearchViewModel {
     }
     
     func displayAPIInfo() {
-        guard let handler = presentAlertHandler else { return }
         guard let response = previousResponseMeta else {
-            handler("Make a search", "Start using the application to retrieve information about the API")
+            displayAlertMessage(title: "Make a search", body: "Start using the application to retrieve information about the API", buttonMsg: "Ok")
             return
         }
         
@@ -176,6 +197,11 @@ class UserSearchViewModel {
         let resetTime = formatter.string(from: resetDate)
         
         let body = "Call Limit: \(response.rateLimit)\nRemaining Calls: \(response.remaining)\nReset Time: \(resetTime)"
-        handler("Latest API Limits", body)
+        displayAlertMessage(title: "Latest API Limits", body: body, buttonMsg: "Ok")
+    }
+    
+    func displayAlertMessage(title: String, body: String, buttonMsg: String, callback: (() -> Void)? = nil) {
+        guard let handler = presentAlertHandler else { return }
+        handler(title, body, buttonMsg, callback)
     }
 }

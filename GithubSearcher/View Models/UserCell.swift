@@ -50,13 +50,24 @@ class UserCell {
     
     private var error: NetworkError? {
         didSet {
-            print("Error")
+            isDataDownloading = false
+            switch error {
+            case .rateLimitReached:
+                guard let handler = setLimitReachedHandler else { return }
+                handler()
+            default:
+                guard let handler = setErrorHandler else { return }
+                handler()
+            }
         }
     }
     
     var avatarDownloadHandler: ((String, @escaping (Data?) -> Void) -> Void)?
     var userDetailsDownloadHandler: ((String, @escaping (Result<UserDetails, NetworkError>) -> Void) -> Void)?
     var setUserReposHandler: ((String) -> Void)?
+    var setLimitReachedHandler: (() -> Void)?
+    var setErrorHandler: (() -> Void)?
+    var presentAlertHandler: ((String, String, String, (() -> Void)?) -> Void)?
 
     init(user: User) {
         self.user = user
@@ -95,9 +106,19 @@ class UserCell {
     }
     
     func navigateToDetails(navigationController: UINavigationController?) {
+        if !shouldNavigate() { return }
         guard let model = userDetails, let image = userAvatar else { return }
-        let detailsViewModel = UserDetailsViewModel(userDetails: model, avatar: image)
+        let detailsViewModel = UserDetailsViewModel(networkHandler: NetworkEngine(), userDetails: model, avatar: image)
         let newView = UserDetailsView(viewModel: detailsViewModel)
         navigationController?.pushViewController(newView, animated: true)
+    }
+    
+    private func shouldNavigate() -> Bool {
+        if error != nil {
+            guard let handler = presentAlertHandler else { return false }
+            handler("Can't go to details", "An error has occurred while getting the user details. Maybe you reched the limit of calls", "Ok", nil)
+            return false
+        }
+        return true
     }
 }

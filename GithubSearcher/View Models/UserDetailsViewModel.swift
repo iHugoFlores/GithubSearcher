@@ -12,10 +12,11 @@ import  UIKit.UIFont
 
 class UserDetailsViewModel {
     
-    let noQueryMessage = "Type on the search bar to search repos"
+    private let noQueryMessage = "Type on the search bar to search repos"
+    private let noReposMessage = "User has no repos"
     
     private let networkManager: NetworkManager!
-    
+    private var previousResponseMeta: APIResponse?
     private var userDetails: UserDetails!
     
     private var avatarImage: Data!
@@ -23,6 +24,7 @@ class UserDetailsViewModel {
 
     private var repoQuery: String? {
         didSet {
+            if userDetails.publicRepos == 0 { return }
             guard let value = repoQuery else { return }
             if value.isEmpty {
                 repoQuery = nil
@@ -70,6 +72,7 @@ class UserDetailsViewModel {
     var setActivityIndicatorHandler: ((Bool) -> Void)?
     var setScreenMessageHandler: ((String?) -> Void)?
     var reloadTableHandler: (() -> Void)?
+    var presentAlertHandler: ((String, String) -> Void)?
     
     init(networkHandler: NetworkProtocol, userDetails: UserDetails, avatar: Data) {
         networkManager = NetworkManager(networkHandler: networkHandler)
@@ -128,11 +131,12 @@ class UserDetailsViewModel {
     func getNewData() {
         if repos.count >= userDetails.publicRepos { return }
         isDataDownloading = true
-        UserRepository.getUserRepos(networkManager: networkManager, user: userDetails.login, page: currentPage) { (result, response) in
+        UserRepository.getUserRepos(networkManager: networkManager, user: userDetails.login, page: currentPage) {[weak self] (result, response) in
             DispatchQueue.main.async {
+                self?.previousResponseMeta = APIResponse(headers: response?.allHeaderFields)
                 switch result {
                 case .success(let data):
-                    self.repos += self.parseResponseToRepositoryCell(userRepositories: data)
+                    self?.repos += (self?.parseResponseToRepositoryCell(userRepositories: data))!
                 case .failure(let error):
                     print("User repo get user repo error", error)
                 }
@@ -166,5 +170,26 @@ class UserDetailsViewModel {
     
     private func filterBy(query: String) {
         filteredRepos = repos.filter { $0.getRepoName().localizedCaseInsensitiveContains(query) }
+    }
+    
+    func displayAPIInfo() {
+        guard let handler = presentAlertHandler else { return }
+        guard let response = previousResponseMeta else {
+            handler("Make a search", "Start using the application to retrieve information about the API")
+            return
+        }
+        
+        let resetDate = Date(timeIntervalSince1970: response.rateReset)
+        let formatter = DateFormatter()
+        formatter.dateStyle = .none
+        formatter.timeStyle = .medium
+        let resetTime = formatter.string(from: resetDate)
+        
+        let body = "Call Limit: \(response.rateLimit)\nRemaining Calls: \(response.remaining)\nReset Time: \(resetTime)"
+        handler("Latest API Limits", body)
+    }
+    
+    func getInitialScreenMessage() -> String {
+        return userDetails.publicRepos == 0 ? noReposMessage : noQueryMessage
     }
 }

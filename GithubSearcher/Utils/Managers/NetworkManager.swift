@@ -49,9 +49,8 @@ class NetworkManager {
                 completion(Result.failure(.noResponseError), nil)
                 return
             }
-            // print("Response", response)
             if response.statusCode != 200 {
-                completion(Result.failure(.serverError), response)
+                completion(Result.failure(self.getSpecificServerError(from: response)), response)
                 return
             }
             guard let data = data else {
@@ -59,6 +58,16 @@ class NetworkManager {
                 return
             }
             completion(Result.success(data), response)
+        }
+    }
+    
+    private func getSpecificServerError(from response: HTTPURLResponse) -> NetworkError {
+        let errorCode = response.statusCode
+        switch errorCode {
+        case 403:
+            return .rateLimitReached
+        default:
+            return .serverError
         }
     }
 }

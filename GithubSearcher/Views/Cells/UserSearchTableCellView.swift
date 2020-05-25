@@ -80,6 +80,8 @@ class UserSearchTableCellView: UITableViewCell {
         viewModel?.setImageHandler = setAvatarImage
         viewModel?.setActivityIndicatorHandler = setActivityIndicatorState
         viewModel?.setUserReposHandler = setUserRepos
+        viewModel?.setLimitReachedHandler = setLimitReachedIndicator
+        viewModel?.setErrorHandler = setErrorIndicator
     }
     
     private func setInitialValues() {
@@ -97,11 +99,27 @@ class UserSearchTableCellView: UITableViewCell {
             mainContainer.removeArrangedSubview(spinner)
             spinner.stopAnimating()
         }
-        
     }
     
     private func setUserRepos(text: String) {
         repoNumberLabel.text = text
         mainContainer.addArrangedSubview(repoNumberLabel)
+    }
+    
+    private func setLimitReachedIndicator() {
+        if mainContainer.arrangedSubviews.count > 2 { return }
+        let image = UIImageView(image: UIImage(systemName: "hourglass"))
+        image.tintColor = .systemYellow
+        image.contentMode = .scaleAspectFit
+        image.constraintTo(width: 24, height: 24)
+        mainContainer.addArrangedSubview(image)
+    }
+    
+    private func setErrorIndicator() {
+        let image = UIImageView(image: UIImage(systemName: "xmark.circle"))
+        image.tintColor = .systemRed
+        image.contentMode = .scaleAspectFit
+        image.constraintTo(width: 24, height: 24)
+        mainContainer.addArrangedSubview(image)
     }
 }
