@@ -14,26 +14,23 @@ class UserDetailsViewModel {
     
     let noQueryMessage = "Type on the search bar to search repos"
     
+    private let networkManager: NetworkManager!
+    
     private var userDetails: UserDetails!
     
     private var avatarImage: Data!
-    
+    private var currentPage = 1
+
     private var repoQuery: String? {
         didSet {
-            guard let value = repoQuery else {
-                isDataDownloading = false
-                displayMessage = noQueryMessage
-                return
-            }
+            guard let value = repoQuery else { return }
             if value.isEmpty {
-                isDataDownloading = false
-                displayMessage = noQueryMessage
                 repoQuery = nil
-                repos = []
+                filteredRepos = repos
                 return
             }
-            isDataDownloading = true
             displayMessage = nil
+            filterBy(query: value)
         }
     }
     
@@ -55,8 +52,18 @@ class UserDetailsViewModel {
     private var repos: [RepositoryCell] = [] {
         didSet {
             isDataDownloading = false
+            guard let query = repoQuery else { return }
+            filterBy(query: query)
+        }
+    }
+    
+    private var filteredRepos: [RepositoryCell] = [] {
+        didSet {
             guard let handler = reloadTableHandler else { return }
             handler()
+            if filteredRepos.isEmpty && repoQuery != nil && !repos.isEmpty {
+                displayMessage = "No repos found"
+            }
         }
     }
     
@@ -64,7 +71,8 @@ class UserDetailsViewModel {
     var setScreenMessageHandler: ((String?) -> Void)?
     var reloadTableHandler: (() -> Void)?
     
-    init(userDetails: UserDetails, avatar: Data) {
+    init(networkHandler: NetworkProtocol, userDetails: UserDetails, avatar: Data) {
+        networkManager = NetworkManager(networkHandler: networkHandler)
         self.userDetails = userDetails
         self.avatarImage = avatar
     }
@@ -118,14 +126,15 @@ class UserDetailsViewModel {
     }
     
     func getNewData() {
-        if repoQuery == nil { return }
-        UserRepository.loadDummyResponse { [unowned self] (result) in
+        if repos.count >= userDetails.publicRepos { return }
+        isDataDownloading = true
+        UserRepository.getUserRepos(networkManager: networkManager, user: userDetails.login, page: currentPage) { (result, response) in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let data):
-                    self.repos = self.parseResponseToRepositoryCell(userRepositories: data)
+                    self.repos += self.parseResponseToRepositoryCell(userRepositories: data)
                 case .failure(let error):
-                    print(error)
+                    print("User repo get user repo error", error)
                 }
             }
         }
@@ -136,10 +145,26 @@ class UserDetailsViewModel {
     }
     
     func getRepoViewModelAt(indexPath: IndexPath) -> RepositoryCell {
-        return repos[indexPath.row]
+        return filteredRepos[indexPath.row]
     }
     
     func getNumberOfRepos() -> Int {
-        return repos.count
+        return filteredRepos.count
+    }
+    
+    func checkForNewPage(indexPath: IndexPath) {
+        if indexPath.row < repos.count - 1 { return }
+        getNewPage()
+    }
+    
+    func getNewPage() {
+        if repos.count >= userDetails.publicRepos || isDataDownloading { return }
+        isDataDownloading = true
+        currentPage += 1
+        getNewData()
+    }
+    
+    private func filterBy(query: String) {
+        filteredRepos = repos.filter { $0.getRepoName().localizedCaseInsensitiveContains(query) }
     }
 }
