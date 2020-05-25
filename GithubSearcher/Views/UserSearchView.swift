@@ -49,6 +49,7 @@ class UserSearchView: UIViewController {
         viewModel.setScreenMessageHandler = displayOnTable
         viewModel.setActivityIndicatorHandler = setActivityIndicatorState
         viewModel.reloadTableHandler = reloadTableData
+        viewModel.presentAlertHandler = displayAlert
     }
 
     required init?(coder: NSCoder) {
@@ -59,8 +60,13 @@ class UserSearchView: UIViewController {
         super.viewDidLoad()
         title = "Github Searcher"
         view.backgroundColor = .white
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "info.circle"), style: .plain, target: self, action: #selector(onInfoPressed))
         setUpViews()
         setUpNotifications()
+    }
+    
+    @objc private func onInfoPressed() {
+        viewModel.displayAPIInfo()
     }
     
     private func setUpViews() {
@@ -157,13 +163,19 @@ class UserSearchView: UIViewController {
         tableView.separatorStyle = .singleLine
         tableView.reloadData()
     }
+    
+    private func displayAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        navigationController?.present(alert, animated: true, completion: nil)
+    }
 }
 
 extension UserSearchView: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         viewModel.setNewQuery(query: searchText)
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(executeNewSearch), object: nil)
-        perform(#selector(executeNewSearch), with: nil, afterDelay: 0.4)
+        perform(#selector(executeNewSearch), with: nil, afterDelay: 0.5)
     }
 }
 
@@ -176,6 +188,7 @@ extension UserSearchView: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: UserSearchTableCellView.reuseIdentifier, for: indexPath) as! UserSearchTableCellView
         let cellViewModel = viewModel.getUserViewModelAt(indexPath: indexPath)
         cell.setUp(viewModel: cellViewModel)
+        viewModel.checkForNewPage(indexPath: indexPath)
         return cell
     }
 }
