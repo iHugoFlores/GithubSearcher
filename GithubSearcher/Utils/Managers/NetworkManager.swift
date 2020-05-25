@@ -15,7 +15,23 @@ class NetworkManager {
         self.networkHandler = networkHandler
     }
     
-    func getDataFrom(url: String, completion: @escaping (Result<Data, NetworkError>) -> Void) {
+    func getRESTDataFrom<T>(url: URL, completion: @escaping (Result<T, NetworkError>, HTTPURLResponse?) -> Void) where T: Decodable {
+        getDataFrom(url: url.absoluteString) { (result, response) in
+            switch result {
+            case .success(let data):
+                do {
+                    let decoded = try JSONDecoder().decode(T.self, from: data)
+                    completion(Result.success(decoded), response)
+                } catch let error {
+                    completion(Result.failure(.unexpectedError(error)), response)
+                }
+            case .failure(let error):
+                completion(Result.failure(error), response)
+            }
+        }
+    }
+    
+    func getDataFrom(url: String, completion: @escaping (Result<Data, NetworkError>, HTTPURLResponse?) -> Void) {
         guard let parsedURL = URL(string: url) else {
             fatalError("Invalid URL string: \(url)")
         }
@@ -23,25 +39,26 @@ class NetworkManager {
             if let error = error as NSError?, error.domain == NSURLErrorDomain {
                 switch error.code {
                 case NSURLErrorNotConnectedToInternet:
-                    completion(Result.failure(.deviceOffline))
+                    completion(Result.failure(.deviceOffline), nil)
                 default:
-                    completion(Result.failure(.unexpectedError(error)))
+                    completion(Result.failure(.unexpectedError(error)), nil)
                 }
                 return
             }
             guard let response = response as? HTTPURLResponse else {
-                completion(Result.failure(.noResponseError))
+                completion(Result.failure(.noResponseError), nil)
                 return
             }
+            // print("Response", response)
             if response.statusCode != 200 {
-                completion(Result.failure(.serverError))
+                completion(Result.failure(.serverError), response)
                 return
             }
             guard let data = data else {
-                completion(Result.failure(.emptyResult))
+                completion(Result.failure(.emptyResult), response)
                 return
             }
-            completion(Result.success(data))
+            completion(Result.success(data), response)
         }
     }
 }
