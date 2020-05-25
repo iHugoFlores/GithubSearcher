@@ -19,18 +19,16 @@ struct UserDetails: Codable {
     let subscriptionsURL, organizationsURL, reposURL: String
     let eventsURL: String
     let receivedEventsURL: String
-    let type: String
     let siteAdmin: Bool
-    let name, blog: String
-    let location, email, company: String?
+    let location, email: String?
     let hireable: Bool?
     let bio: String?
     let publicRepos, publicGists, followers, following: Int
     let createdAt, updatedAt: String
 
     private enum CodingKeys: String, CodingKey {
-        case login, id, url, type, name, company
-        case blog, location, email, hireable, bio, followers, following
+        case login, id, url
+        case location, email, hireable, bio, followers, following
         case nodeID = "node_id"
         case avatarURL = "avatar_url"
         case gravatarID = "gravatar_id"
@@ -54,10 +52,27 @@ struct UserDetails: Codable {
 
 extension UserDetails {
     typealias Completion = (Result<Self, NetworkError>) -> Void
+    typealias CompletionWithResponse = (Result<Self, NetworkError>, HTTPURLResponse?) -> Void
+    private static var endpointComponent: URLComponents = {
+        var urlC = URLComponents()
+        urlC.scheme = "https"
+        urlC.host = "api.github.com"
+        urlC.path = "/users"
+        return urlC
+    }()
+
     static func loadDummyResponse(callback: @escaping Completion) {
         DispatchQueue.global().asyncAfter(deadline: .now() + 0.2) {
             let data: Self = JSONUtil.load(name: "UserDetails")
             callback(Result.success(data))
+        }
+    }
+    
+    static func getUserDetails(networkManager: NetworkManager, user: String, callback: @escaping CompletionWithResponse) {
+        endpointComponent.path += "/\(user)"
+        guard let url = endpointComponent.url else { return }
+        networkManager.getRESTDataFrom(url: url) { (result: Result<Self, NetworkError>, response) in
+            callback(result, response)
         }
     }
 }
