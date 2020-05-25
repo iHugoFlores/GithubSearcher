@@ -6,7 +6,9 @@
 //  Copyright © 2020 Hugo Flores Perez. All rights reserved.
 //
 
-import UIKit
+import Foundation
+import  UIKit.UIColor
+import  UIKit.UIFont
 
 class UserDetailsViewModel {
     
