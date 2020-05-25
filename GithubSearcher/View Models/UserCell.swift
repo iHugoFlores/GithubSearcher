@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit.UINavigationController
 
 class UserCell {
     private let user: User
@@ -91,5 +92,12 @@ class UserCell {
                 }
             }
         }
+    }
+    
+    func navigateToDetails(navigationController: UINavigationController?) {
+        guard let model = userDetails, let image = userAvatar else { return }
+        let detailsViewModel = UserDetailsViewModel(userDetails: model, avatar: image)
+        let newView = UserDetailsView(viewModel: detailsViewModel)
+        navigationController?.pushViewController(newView, animated: true)
     }
 }

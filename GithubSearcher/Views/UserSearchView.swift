@@ -74,6 +74,7 @@ class UserSearchView: UIViewController {
     }
     
     private func setUpTable() {
+        tableView.delegate = self
         tableView.dataSource = self
         tableView.register(UserSearchTableCellView.self, forCellReuseIdentifier: UserSearchTableCellView.reuseIdentifier)
         view.addSubview(tableView)
@@ -176,5 +177,13 @@ extension UserSearchView: UITableViewDataSource {
         let cellViewModel = viewModel.getUserViewModelAt(indexPath: indexPath)
         cell.setUp(viewModel: cellViewModel)
         return cell
+    }
+}
+
+extension UserSearchView: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let cellViewModel = viewModel.getUserViewModelAt(indexPath: indexPath)
+        cellViewModel.navigateToDetails(navigationController: navigationController)
     }
 }
