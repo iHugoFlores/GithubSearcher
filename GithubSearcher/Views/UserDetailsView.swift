@@ -197,6 +197,7 @@ extension UserDetailsView: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: RepositoryTableCellView.reuseIdentifier, for: indexPath) as! RepositoryTableCellView
         let repoViewModel = viewModel.getRepoViewModelAt(indexPath: indexPath)
         cell.setUp(viewModel: repoViewModel)
+        viewModel.checkForNewPage(indexPath: indexPath)
         return cell
     }
 }
