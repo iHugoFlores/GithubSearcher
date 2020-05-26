@@ -158,8 +158,8 @@ class UserSearchViewModel {
             case .success(let imgData):
                 completion(imgData)
                 self.cachedImages.setObject(imgData as NSData, forKey: url as NSString)
-            case .failure(let error):
-                print("Error in image download: ", error)
+            case .failure:
+                completion(nil)
             }
         }
     }

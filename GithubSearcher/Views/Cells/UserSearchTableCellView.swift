@@ -23,7 +23,7 @@ class UserSearchTableCellView: UITableViewCell {
 
     private let nameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 20)
+        label.font = UIFont.boldSystemFont(ofSize: 18)
         label.textAlignment = .left
         label.numberOfLines = 2
         return label

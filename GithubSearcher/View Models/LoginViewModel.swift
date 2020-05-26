@@ -62,22 +62,32 @@ class LoginViewModel {
     }
 
     private func eliminateStoredUser() {
-        let defaults = UserDefaults.standard
-        defaults.removeObject(forKey: Constants.UserDefaults.USER)
-        defaults.removeObject(forKey: Constants.UserDefaults.PASSWORD)
+        do {
+            try KeychainManager.deletePassword(service: Constants.Keychain.service, account: Constants.Keychain.account)
+        } catch let error {
+            fatalError("Error on saving data to keychain: \(error)")
+        }
         guard let handler = presentAlertHandler, let dismiss = dismissHandler else { return }
         handler("Logged Out", "Your credentials have been deleted from the device", "Return", dismiss)
     }
 
     private func onUserValidated(user: String, password: String) {
-        let defaults = UserDefaults.standard
-        defaults.set(user, forKey: Constants.UserDefaults.USER)
-        defaults.set(password, forKey: Constants.UserDefaults.PASSWORD)
+        do {
+            try KeychainManager.savePassword("\(user):\(password)", withService: Constants.Keychain.service, account: Constants.Keychain.account)
+        } catch let error {
+            fatalError("Error on saving data to keychain: \(error)")
+        }
+
         guard let handler = presentAlertHandler, let dismiss = dismissHandler else { return }
         handler("Logged in", "You can now perform more requests", "Return", dismiss)
     }
     
     func checkIfLoggedUserExists() -> Bool {
-        return UserDefaults.standard.string(forKey: Constants.UserDefaults.USER) != nil
+        do {
+            let _ = try KeychainManager.getPassword(service: Constants.Keychain.service, account: Constants.Keychain.account)
+            return true
+        } catch {
+            return false
+        }
     }
 }
