@@ -15,13 +15,13 @@ struct APIResponse {
     
     init(headers: [AnyHashable: Any]?) {
         guard let headers = headers else {
-            rateLimit = -1
-            remaining = -1
+            rateLimit = -2
+            remaining = -2
             rateReset = 0
             return
         }
-        rateLimit = Int(headers["X-Ratelimit-Limit"] as? String ?? "-1")!
-        remaining = Int(headers["X-Ratelimit-Remaining"] as? String ?? "-1")!
-        rateReset = Double(headers["X-Ratelimit-Reset"] as? String ?? "0")!
+        rateLimit = Int((headers["X-Ratelimit-Limit"] ?? headers["X-RateLimit-Limit"]) as? String ?? "-1")!
+        remaining = Int((headers["X-Ratelimit-Remaining"] ?? headers["X-RateLimit-Remaining"]) as? String ?? "-1")!
+        rateReset = Double((headers["X-Ratelimit-Reset"] ?? headers["X-RateLimit-Reset"]) as? String ?? "0")!
     }
 }
