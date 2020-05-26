@@ -35,7 +35,7 @@ class SpinnerView: UIView {
     }
     
     func stop() {
-        guard let superview = superview else { print("No superview"); return }
+        guard let superview = superview else { return }
         spinner.stopAnimating()
         spinner.removeFromSuperview()
         UIView.transition(

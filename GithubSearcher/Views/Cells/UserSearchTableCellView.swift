@@ -53,6 +53,8 @@ class UserSearchTableCellView: UITableViewCell {
         spinner.setContentHuggingPriority(.required, for: .horizontal)
         return spinner
     }()
+    
+    private let alertImage = UIImageView()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -72,19 +74,21 @@ class UserSearchTableCellView: UITableViewCell {
 
     func setUp(viewModel: UserCell) {
         self.viewModel = viewModel
-        setUpDataBinding()
         setInitialValues()
+        setUpDataBinding()
     }
     
     private func setUpDataBinding() {
         viewModel?.setImageHandler = setAvatarImage
-        viewModel?.setActivityIndicatorHandler = setActivityIndicatorState
         viewModel?.setUserReposHandler = setUserRepos
         viewModel?.setLimitReachedHandler = setLimitReachedIndicator
         viewModel?.setErrorHandler = setErrorIndicator
+        viewModel?.setActivityIndicatorHandler = setActivityIndicatorState
     }
     
     private func setInitialValues() {
+        mainContainer.removeArrangedSubview(alertImage)
+        mainContainer.removeArrangedSubview(repoNumberLabel)
         nameLabel.text = viewModel?.getUserName()
     }
     
@@ -104,23 +108,26 @@ class UserSearchTableCellView: UITableViewCell {
     private func setUserRepos(text: String) {
         repoNumberLabel.text = text
         mainContainer.addArrangedSubview(repoNumberLabel)
+        mainContainer.removeArrangedSubview(alertImage)
     }
     
     private func setLimitReachedIndicator() {
-        if mainContainer.arrangedSubviews.count > 2 { return }
-        let image = UIImageView(image: UIImage(systemName: "hourglass"))
-        image.tintColor = .systemYellow
-        image.contentMode = .scaleAspectFit
-        image.constraintTo(width: 24, height: 24)
-        mainContainer.addArrangedSubview(image)
+        mainContainer.addArrangedSubview(alertImage)
+        alertImage.image = UIImage(systemName: "hourglass.tophalf.fill")
+        alertImage.tintColor = .systemYellow
+        alertImage.contentMode = .scaleAspectFit
+        alertImage.constraintTo(width: 24, height: 24)
+        mainContainer.removeArrangedSubview(repoNumberLabel)
+        repoNumberLabel.removeFromSuperview()
     }
     
     private func setErrorIndicator() {
-        if mainContainer.arrangedSubviews.count > 2 { return }
-        let image = UIImageView(image: UIImage(systemName: "xmark.circle"))
-        image.tintColor = .systemRed
-        image.contentMode = .scaleAspectFit
-        image.constraintTo(width: 24, height: 24)
-        mainContainer.addArrangedSubview(image)
+        mainContainer.addArrangedSubview(alertImage)
+        alertImage.image = UIImage(systemName: "xmark.circle")
+        alertImage.tintColor = .systemRed
+        alertImage.contentMode = .scaleAspectFit
+        alertImage.constraintTo(width: 24, height: 24)
+        mainContainer.removeArrangedSubview(repoNumberLabel)
+        repoNumberLabel.removeFromSuperview()
     }
 }
