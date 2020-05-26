@@ -35,6 +35,14 @@ extension UsersResponse {
     static func getUsers(networkManager: NetworkManager, query: String, page: Int, callback: @escaping CompletionWithResponse) {
         endpoint.queryItems = Self.getQueryParameters(query: query, page: page)
         guard let url = endpoint.url else { return }
+        if let storedUser = UserDefaults.standard.string(forKey: Constants.UserDefaults.USER),
+            let storedPassword = UserDefaults.standard.string(forKey: Constants.UserDefaults.PASSWORD) {
+            let credentials = "\(storedUser):\(storedPassword)"
+            networkManager.getRESTDataFrom(url: url, credentials: credentials) { (result: Result<Self, NetworkError>, response) in
+                callback(result, response)
+            }
+            return
+        }
         networkManager.getRESTDataFrom(url: url) { (result: Result<Self, NetworkError>, response) in
             callback(result, response)
         }

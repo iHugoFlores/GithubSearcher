@@ -17,18 +17,24 @@ class NetworkManager {
     }
 
     func getRESTDataFrom<T>(url: URL, completion: @escaping (Result<T, NetworkError>, HTTPURLResponse?) -> Void) where T: Decodable {
-        getDataFrom(url: url.absoluteString) { (result, response) in
-            switch result {
-            case .success(let data):
-                do {
-                    let decoded = try JSONDecoder().decode(T.self, from: data)
-                    completion(Result.success(decoded), response)
-                } catch let error {
-                    completion(Result.failure(.unexpectedError(error)), response)
-                }
-            case .failure(let error):
-                completion(Result.failure(error), response)
+        getDataFrom(url: url.absoluteString) { self.handleRESTResponse(result: $0, response: $1, completion: completion) }
+    }
+    
+    func getRESTDataFrom<T>(url: URL, credentials: String, completion: @escaping (Result<T, NetworkError>, HTTPURLResponse?) -> Void) where T: Decodable {
+        getDataFrom(url: url.absoluteString, credentials: credentials) { self.handleRESTResponse(result: $0, response: $1, completion: completion) }
+    }
+    
+    private func handleRESTResponse<T>(result: Result<Data, NetworkError>, response: HTTPURLResponse?, completion: @escaping (Result<T, NetworkError>, HTTPURLResponse?) -> Void) where T: Decodable {
+        switch result {
+        case .success(let data):
+            do {
+                let decoded = try JSONDecoder().decode(T.self, from: data)
+                completion(Result.success(decoded), response)
+            } catch let error {
+                completion(Result.failure(.unexpectedError(error)), response)
             }
+        case .failure(let error):
+            completion(Result.failure(error), response)
         }
     }
 
