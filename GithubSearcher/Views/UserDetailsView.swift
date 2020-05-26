@@ -129,9 +129,31 @@ class UserDetailsView: UIViewController {
     
     private func setUpInitData() {
         userImage.image = UIImage(data: viewModel.getUserAvatar())
-        userDataLabel.attributedText = viewModel.getUserDescription()
+        let content = viewModel.getUserDescription()
+        setUserDescription(top: content.top, middle: content.middle, bottom: content.bottom)
         biograpgyLabel.text = viewModel.getUserBiography()
         displayOnTable(message: viewModel.getInitialScreenMessage())
+    }
+    
+    private func setUserDescription(top: String, middle: String, bottom: String) {
+        let stringContent = NSMutableAttributedString(
+            string: "\(top)\n",
+            attributes: [
+                NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 24)
+        ])
+        stringContent.append(NSAttributedString(
+            string: "\(middle)\n",
+            attributes: [
+                NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16),
+                NSAttributedString.Key.foregroundColor: UIColor.gray]
+        ))
+        stringContent.append(NSAttributedString(
+            string: "\(bottom)",
+            attributes: [
+                NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16),
+                NSAttributedString.Key.foregroundColor: UIColor.gray]
+        ))
+        userDataLabel.attributedText = stringContent
     }
     
     private func displayOnTable(message: String?) {

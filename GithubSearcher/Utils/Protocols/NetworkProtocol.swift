@@ -12,6 +12,7 @@ public enum NetworkError: Error {
     case unexpectedError(Error)
     case emptyResult
     case deviceOffline
+    case unauthorized
     case rateLimitReached
     case serverError
     case noResponseError
@@ -20,4 +21,5 @@ public enum NetworkError: Error {
 protocol NetworkProtocol {
     typealias CompletionHandler = (Data?, URLResponse?, Error?) -> Void
     func getData(url: URL, completion: @escaping CompletionHandler)
+    func getData(url: URL, withAuth: String?, completion: @escaping CompletionHandler)
 }

@@ -60,24 +60,19 @@ extension UserDetails {
         urlC.path = "/users"
         return urlC.url!
     }()
-
-    static func loadDummyResponse(callback: @escaping Completion) {
-        DispatchQueue.global().asyncAfter(deadline: .now() + 0.2) {
-            let data: Self = JSONUtil.load(name: "UserDetails")
-            callback(Result.success(data))
-        }
-    }
     
     static func getUserDetails(networkManager: NetworkManager, user: String, callback: @escaping CompletionWithResponse) {
-        /*
-        DispatchQueue.global().async {
-            let data: Self = JSONUtil.load(name: "UserDetails")
-            callback(Result.success(data), HTTPURLResponse())
-        }
-        */
         guard var urlC = URLComponents(url: endpoint, resolvingAgainstBaseURL: true) else { return }
         urlC.path += "/\(user)"
         guard let url = urlC.url else { return }
+        if let storedUser = UserDefaults.standard.string(forKey: Constants.UserDefaults.USER),
+            let storedPassword = UserDefaults.standard.string(forKey: Constants.UserDefaults.PASSWORD) {
+            let credentials = "\(storedUser):\(storedPassword)"
+            networkManager.getRESTDataFrom(url: url, credentials: credentials) { (result: Result<Self, NetworkError>, response) in
+                callback(result, response)
+            }
+            return
+        }
         networkManager.getRESTDataFrom(url: url) { (result: Result<Self, NetworkError>, response) in
             callback(result, response)
         }

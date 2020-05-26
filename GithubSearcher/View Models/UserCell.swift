@@ -20,6 +20,22 @@ class UserCell {
     
     var setActivityIndicatorHandler: ((Bool) -> Void)? {
         didSet {
+            if let details = userDetails {
+                guard let handler = setUserReposHandler else { return }
+                let repos = "\(details.publicRepos) \(details.publicRepos > 1 ? "repos" : "repo")"
+                handler(repos)
+                return
+            }
+            if let error = error {
+                switch error {
+                case .rateLimitReached:
+                    guard let handler = setLimitReachedHandler else { return }
+                    handler()
+                default:
+                    guard let handler = setErrorHandler else { return }
+                    handler()
+                }
+            }
             getUserDetails()
         }
     }
@@ -41,6 +57,7 @@ class UserCell {
     
     private var userDetails: UserDetails? {
         didSet {
+            if error != nil { return }
             guard let details = userDetails, let handler = setUserReposHandler else { return }
             let repos = "\(details.publicRepos) \(details.publicRepos > 1 ? "repos" : "repo")"
             handler(repos)
@@ -48,7 +65,7 @@ class UserCell {
         }
     }
     
-    private var error: NetworkError? {
+    var error: NetworkError? {
         didSet {
             isDataDownloading = false
             switch error {
@@ -91,6 +108,7 @@ class UserCell {
     }
     
     private func getUserDetails() {
+        if userDetails != nil || error != nil { return }
         guard let handler = userDetailsDownloadHandler else { return }
         isDataDownloading = true
         handler(user.login) { [weak self] result in
@@ -114,7 +132,7 @@ class UserCell {
     }
     
     private func shouldNavigate() -> Bool {
-        if error != nil {
+        if userDetails == nil {
             guard let handler = presentAlertHandler else { return false }
             handler("Can't go to details", "An error has occurred while getting the user details. Maybe you reched the limit of calls", "Ok", nil)
             return false

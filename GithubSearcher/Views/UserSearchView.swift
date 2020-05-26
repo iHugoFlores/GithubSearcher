@@ -62,8 +62,13 @@ class UserSearchView: UIViewController {
         title = "Github Searcher"
         view.backgroundColor = .white
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "info.circle"), style: .plain, target: self, action: #selector(onInfoPressed))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "person.circle"), style: .plain, target: self, action: #selector(onAccountPressed))
         setUpViews()
         setUpNotifications()
+    }
+    
+    @objc private func onAccountPressed() {
+        viewModel.navigateToLogin(navigationController: navigationController)
     }
     
     @objc private func onInfoPressed() {
