@@ -22,7 +22,7 @@ class UserSearchViewModel {
     
     private var currentPage = 1
     private var maxNumberOfUsers = 0
-    
+
     private var previousResponseMeta: APIResponse?
     
     private var users: [UserCell] = [] {
@@ -197,7 +197,10 @@ class UserSearchViewModel {
         formatter.timeStyle = .medium
         let resetTime = formatter.string(from: resetDate)
         
-        let body = "Call Limit: \(response.rateLimit)\nRemaining Calls: \(response.remaining)\nReset Time: \(resetTime)"
+        let callLimit = response.rateLimit < 0 ? "No Limit" : String(response.rateLimit)
+        let callRemain = response.remaining < 0 ? "No Limit" : String(response.remaining)
+        
+        let body = "Call Limit: \(callLimit)\nRemaining Calls: \(callRemain)\nReset Time: \(resetTime)"
         displayAlertMessage(title: "Latest API Limits", body: body, buttonMsg: "Ok")
     }
     
