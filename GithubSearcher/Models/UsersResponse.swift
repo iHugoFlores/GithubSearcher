@@ -31,14 +31,7 @@ extension UsersResponse {
         urlC.path = "/search/users"
         return urlC
     }()
-    
-    static func loadDummyResponse(callback: @escaping Completion) {
-        DispatchQueue.global().asyncAfter(deadline: .now() + 0.2) {
-            let data: Self = JSONUtil.load(name: "UsersResponse")
-            callback(Result.success(data))
-        }
-    }
-    
+
     static func getUsers(networkManager: NetworkManager, query: String, page: Int, callback: @escaping CompletionWithResponse) {
         endpoint.queryItems = Self.getQueryParameters(query: query, page: page)
         guard let url = endpoint.url else { return }

@@ -34,13 +34,6 @@ extension UserRepository {
         return urlC.url!
     }()
 
-    static func loadDummyResponse(callback: @escaping Completion) {
-        DispatchQueue.global().asyncAfter(deadline: .now() + 0.2) {
-            let data: [Self] = JSONUtil.load(name: "UserRepositories")
-            callback(Result.success(data))
-        }
-    }
-    
     static func getUserRepos(networkManager: NetworkManager, user: String, page: Int, callback: @escaping CompletionWithResponse) {
         guard var urlC = URLComponents(url: endpoint, resolvingAgainstBaseURL: true) else { return }
         urlC.path += "/\(user)/repos"

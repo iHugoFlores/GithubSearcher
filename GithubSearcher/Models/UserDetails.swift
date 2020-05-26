@@ -60,21 +60,8 @@ extension UserDetails {
         urlC.path = "/users"
         return urlC.url!
     }()
-
-    static func loadDummyResponse(callback: @escaping Completion) {
-        DispatchQueue.global().asyncAfter(deadline: .now() + 0.2) {
-            let data: Self = JSONUtil.load(name: "UserDetails")
-            callback(Result.success(data))
-        }
-    }
     
     static func getUserDetails(networkManager: NetworkManager, user: String, callback: @escaping CompletionWithResponse) {
-        /*
-        DispatchQueue.global().async {
-            let data: Self = JSONUtil.load(name: "UserDetails")
-            callback(Result.success(data), HTTPURLResponse())
-        }
-        */
         guard var urlC = URLComponents(url: endpoint, resolvingAgainstBaseURL: true) else { return }
         urlC.path += "/\(user)"
         guard let url = urlC.url else { return }
