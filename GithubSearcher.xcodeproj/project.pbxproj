@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		F061F6D9247BF7EF00C65616 /* UserRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F061F6D8247BF7EF00C65616 /* UserRepository.swift */; };
-		F061F6DB247BFA2A00C65616 /* UserRepositories.json in Resources */ = {isa = PBXBuildFile; fileRef = F061F6DA247BFA2A00C65616 /* UserRepositories.json */; };
 		F061F6DD247C018700C65616 /* RepositoryTableCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F061F6DC247C018700C65616 /* RepositoryTableCellView.swift */; };
 		F061F6DF247C072A00C65616 /* RepositoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F061F6DE247C072A00C65616 /* RepositoryCell.swift */; };
 		F061F6E1247C1FAF00C65616 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F061F6E0247C1FAF00C65616 /* WebView.swift */; };
@@ -24,11 +23,15 @@
 		F08F18CB24786397005AA11A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08F18CA24786397005AA11A /* AppDelegate.swift */; };
 		F08F18D424786399005AA11A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F08F18D324786399005AA11A /* Assets.xcassets */; };
 		F08F18D724786399005AA11A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F08F18D524786399005AA11A /* LaunchScreen.storyboard */; };
+		F0FD3CB7247D3F7300BE3B15 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0FD3CB6247D3F7300BE3B15 /* LoginView.swift */; };
+		F0FD3CBC247D4EED00BE3B15 /* RoundedTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0FD3CBB247D4EED00BE3B15 /* RoundedTextField.swift */; };
+		F0FD3CBE247D564D00BE3B15 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0FD3CBD247D564D00BE3B15 /* LoginViewModel.swift */; };
+		F0FD3CC0247D5A6100BE3B15 /* LoginResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0FD3CBF247D5A6100BE3B15 /* LoginResponse.swift */; };
+		F0FD3CC2247D5D5D00BE3B15 /* SpinnerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0FD3CC1247D5D5D00BE3B15 /* SpinnerView.swift */; };
+		F0FD3CC4247D694200BE3B15 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0FD3CC3247D694200BE3B15 /* Constants.swift */; };
 		F0FFCD4E2479A41B00FB8ECF /* UsersResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0FFCD4D2479A41B00FB8ECF /* UsersResponse.swift */; };
 		F0FFCD502479AD1800FB8ECF /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0FFCD4F2479AD1800FB8ECF /* User.swift */; };
 		F0FFCD522479AD2600FB8ECF /* UserDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0FFCD512479AD2600FB8ECF /* UserDetails.swift */; };
-		F0FFCD542479AF0C00FB8ECF /* UsersResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = F0FFCD532479AF0C00FB8ECF /* UsersResponse.json */; };
-		F0FFCD562479AF1200FB8ECF /* UserDetails.json in Resources */ = {isa = PBXBuildFile; fileRef = F0FFCD552479AF1200FB8ECF /* UserDetails.json */; };
 		F0FFCD592479B0B800FB8ECF /* JSONUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0FFCD582479B0B800FB8ECF /* JSONUtil.swift */; };
 		F0FFCD5B2479C36A00FB8ECF /* UserSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0FFCD5A2479C36A00FB8ECF /* UserSearchView.swift */; };
 		F0FFCD5D2479C95F00FB8ECF /* UserSearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0FFCD5C2479C95F00FB8ECF /* UserSearchViewModel.swift */; };
@@ -36,7 +39,6 @@
 
 /* Begin PBXFileReference section */
 		F061F6D8247BF7EF00C65616 /* UserRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRepository.swift; sourceTree = "<group>"; };
-		F061F6DA247BFA2A00C65616 /* UserRepositories.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = UserRepositories.json; sourceTree = "<group>"; };
 		F061F6DC247C018700C65616 /* RepositoryTableCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryTableCellView.swift; sourceTree = "<group>"; };
 		F061F6DE247C072A00C65616 /* RepositoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryCell.swift; sourceTree = "<group>"; };
 		F061F6E0247C1FAF00C65616 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
@@ -54,11 +56,15 @@
 		F08F18D324786399005AA11A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F08F18D624786399005AA11A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F08F18D824786399005AA11A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F0FD3CB6247D3F7300BE3B15 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		F0FD3CBB247D4EED00BE3B15 /* RoundedTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedTextField.swift; sourceTree = "<group>"; };
+		F0FD3CBD247D564D00BE3B15 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		F0FD3CBF247D5A6100BE3B15 /* LoginResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginResponse.swift; sourceTree = "<group>"; };
+		F0FD3CC1247D5D5D00BE3B15 /* SpinnerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerView.swift; sourceTree = "<group>"; };
+		F0FD3CC3247D694200BE3B15 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		F0FFCD4D2479A41B00FB8ECF /* UsersResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersResponse.swift; sourceTree = "<group>"; };
 		F0FFCD4F2479AD1800FB8ECF /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		F0FFCD512479AD2600FB8ECF /* UserDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetails.swift; sourceTree = "<group>"; };
-		F0FFCD532479AF0C00FB8ECF /* UsersResponse.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = UsersResponse.json; sourceTree = "<group>"; };
-		F0FFCD552479AF1200FB8ECF /* UserDetails.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = UserDetails.json; sourceTree = "<group>"; };
 		F0FFCD582479B0B800FB8ECF /* JSONUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONUtil.swift; sourceTree = "<group>"; };
 		F0FFCD5A2479C36A00FB8ECF /* UserSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSearchView.swift; sourceTree = "<group>"; };
 		F0FFCD5C2479C95F00FB8ECF /* UserSearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSearchViewModel.swift; sourceTree = "<group>"; };
@@ -147,15 +153,24 @@
 			path = GithubSearcher;
 			sourceTree = "<group>";
 		};
+		F0FD3CBA247D4EC400BE3B15 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				F0FD3CBB247D4EED00BE3B15 /* RoundedTextField.swift */,
+				F0FD3CC1247D5D5D00BE3B15 /* SpinnerView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
 		F0FFCD4724798F5E00FB8ECF /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				F0FFCD4C2479980500FB8ECF /* Mocks */,
 				F0FFCD4F2479AD1800FB8ECF /* User.swift */,
 				F0FFCD4D2479A41B00FB8ECF /* UsersResponse.swift */,
 				F0FFCD512479AD2600FB8ECF /* UserDetails.swift */,
 				F061F6D8247BF7EF00C65616 /* UserRepository.swift */,
 				F061F6E2247C3BEB00C65616 /* APIResponse.swift */,
+				F0FD3CBF247D5A6100BE3B15 /* LoginResponse.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -163,10 +178,12 @@
 		F0FFCD4824798F6800FB8ECF /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				F0FD3CBA247D4EC400BE3B15 /* Components */,
 				F07840F1247ADD4E00D46509 /* Cells */,
 				F0FFCD5A2479C36A00FB8ECF /* UserSearchView.swift */,
 				F07840FF247B42B200D46509 /* UserDetailsView.swift */,
 				F061F6E0247C1FAF00C65616 /* WebView.swift */,
+				F0FD3CB6247D3F7300BE3B15 /* LoginView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -178,6 +195,7 @@
 				F07840F4247AEDDB00D46509 /* UserCell.swift */,
 				F0784101247B431E00D46509 /* UserDetailsViewModel.swift */,
 				F061F6DE247C072A00C65616 /* RepositoryCell.swift */,
+				F0FD3CBD247D564D00BE3B15 /* LoginViewModel.swift */,
 			);
 			path = "View Models";
 			sourceTree = "<group>";
@@ -198,16 +216,6 @@
 			path = Assets;
 			sourceTree = "<group>";
 		};
-		F0FFCD4C2479980500FB8ECF /* Mocks */ = {
-			isa = PBXGroup;
-			children = (
-				F061F6DA247BFA2A00C65616 /* UserRepositories.json */,
-				F0FFCD532479AF0C00FB8ECF /* UsersResponse.json */,
-				F0FFCD552479AF1200FB8ECF /* UserDetails.json */,
-			);
-			path = Mocks;
-			sourceTree = "<group>";
-		};
 		F0FFCD572479AF2F00FB8ECF /* Utils */ = {
 			isa = PBXGroup;
 			children = (
@@ -216,6 +224,7 @@
 				F07840F6247B04B500D46509 /* Protocols */,
 				F07840EE247ABBE400D46509 /* Extensions */,
 				F0FFCD582479B0B800FB8ECF /* JSONUtil.swift */,
+				F0FD3CC3247D694200BE3B15 /* Constants.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -278,11 +287,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F061F6DB247BFA2A00C65616 /* UserRepositories.json in Resources */,
 				F08F18D724786399005AA11A /* LaunchScreen.storyboard in Resources */,
-				F0FFCD562479AF1200FB8ECF /* UserDetails.json in Resources */,
 				F08F18D424786399005AA11A /* Assets.xcassets in Resources */,
-				F0FFCD542479AF0C00FB8ECF /* UsersResponse.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -293,21 +299,27 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F0FD3CBE247D564D00BE3B15 /* LoginViewModel.swift in Sources */,
+				F0FD3CC2247D5D5D00BE3B15 /* SpinnerView.swift in Sources */,
 				F0784100247B42B200D46509 /* UserDetailsView.swift in Sources */,
 				F07840F3247ADD8D00D46509 /* UserSearchTableCellView.swift in Sources */,
 				F07840F0247ABBF700D46509 /* UIView+Ext.swift in Sources */,
 				F07840FC247B05EB00D46509 /* NetworkEngine.swift in Sources */,
 				F07840FE247B062100D46509 /* NetworkManager.swift in Sources */,
+				F0FD3CC4247D694200BE3B15 /* Constants.swift in Sources */,
 				F0FFCD502479AD1800FB8ECF /* User.swift in Sources */,
 				F0FFCD4E2479A41B00FB8ECF /* UsersResponse.swift in Sources */,
 				F0FFCD592479B0B800FB8ECF /* JSONUtil.swift in Sources */,
 				F08F18CB24786397005AA11A /* AppDelegate.swift in Sources */,
 				F061F6DF247C072A00C65616 /* RepositoryCell.swift in Sources */,
+				F0FD3CBC247D4EED00BE3B15 /* RoundedTextField.swift in Sources */,
 				F0FFCD5D2479C95F00FB8ECF /* UserSearchViewModel.swift in Sources */,
 				F0FFCD5B2479C36A00FB8ECF /* UserSearchView.swift in Sources */,
+				F0FD3CC0247D5A6100BE3B15 /* LoginResponse.swift in Sources */,
 				F0784102247B431E00D46509 /* UserDetailsViewModel.swift in Sources */,
 				F061F6E3247C3BEB00C65616 /* APIResponse.swift in Sources */,
 				F061F6E1247C1FAF00C65616 /* WebView.swift in Sources */,
+				F0FD3CB7247D3F7300BE3B15 /* LoginView.swift in Sources */,
 				F07840FA247B04F900D46509 /* NetworkProtocol.swift in Sources */,
 				F07840F5247AEDDB00D46509 /* UserCell.swift in Sources */,
 				F061F6D9247BF7EF00C65616 /* UserRepository.swift in Sources */,
