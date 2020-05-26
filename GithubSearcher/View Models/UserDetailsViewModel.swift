@@ -7,8 +7,6 @@
 //
 
 import Foundation
-import  UIKit.UIColor
-import  UIKit.UIFont
 
 class UserDetailsViewModel {
     
@@ -88,36 +86,17 @@ class UserDetailsViewModel {
         return avatarImage
     }
     
-    func getUserDescription() -> NSMutableAttributedString {
-        let stringContent = NSMutableAttributedString(
-            string: "\(userDetails.login)\n",
-            attributes: [
-                NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 24)
-        ])
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-        var joinDate = ""
-        if let date = dateFormatter.date(from: userDetails.createdAt) {
-            dateFormatter.dateStyle = .medium
-            dateFormatter.timeStyle = .none
-            joinDate = dateFormatter.string(from: date)
+    func getUserDescription() -> (top: String, middle: String, bottom: String) {
+        var joinDate = "No Join Date"
+        if let date = Constants.isoDateFormatter.date(from: userDetails.createdAt) {
+            joinDate = Constants.dateFormatter.string(from: date)
         }
-        
-        stringContent.append(NSAttributedString(
-            string: "\(userDetails.email ?? "No Email")\n\(userDetails.location ?? "No Location")\n\(joinDate)\n",
-            attributes: [
-                NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16),
-                NSAttributedString.Key.foregroundColor: UIColor.gray]
-        ))
-
-        stringContent.append(NSAttributedString(
-            string: "\(userDetails.followers) followers\nFollowing \(userDetails.following)",
-            attributes: [
-                NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16),
-                NSAttributedString.Key.foregroundColor: UIColor.gray]
-        ))
-        return stringContent
+        let response = (
+            top: "\(userDetails.login)",
+            middle: "\(userDetails.email ?? "No Email")\n\(userDetails.location ?? "No Location")\n\(joinDate)",
+            bottom: "\(userDetails.followers) followers\nFollowing \(userDetails.following)"
+        )
+        return response
     }
     
     func getUserBiography() -> String {
