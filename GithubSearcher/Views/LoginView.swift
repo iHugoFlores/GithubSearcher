@@ -12,8 +12,7 @@ class LoginView: UIViewController {
     
     private let topBar: UINavigationBar = {
         let bar = UINavigationBar()
-        bar.pushItem(UINavigationItem(title: "Login To Github"), animated: false)
-        bar.topItem?.rightBarButtonItem = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(dismissView))
+        bar.pushItem(UINavigationItem(title: "..."), animated: false)
         bar.backgroundColor = .systemBackground
         return bar
     }()
@@ -59,10 +58,8 @@ class LoginView: UIViewController {
     private let loginButton: UIButton = {
         let button = UIButton(type: .custom)
         button.backgroundColor = .black
-        button.setTitle("Login", for: .normal)
         button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
-        button.addTarget(self, action: #selector(onButtonPressed), for: .touchUpInside)
         return button
     }()
     
@@ -110,15 +107,32 @@ class LoginView: UIViewController {
     
     private func setUpViews() {
         topBar.addAtTopOf(parent: view)
-        
+        topBar.topItem?.rightBarButtonItem = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(dismissView))
+        loginButton.addTarget(self, action: #selector(onButtonPressed), for: .touchUpInside)
+        viewModel.checkIfLoggedUserExists()
+            ? renderLogoutView()
+            : renderLoginView()
+    }
+    
+    private func renderLoginView() {
+        topBar.topItem?.title = "Log in to Github"
         verticalContainer.addArrangedSubview(userField)
         verticalContainer.addArrangedSubview(passwordField)
         horizontalContainer.addArrangedSubview(verticalContainer)
         horizontalContainer.addArrangedSubview(loginButton)
+        loginButton.setTitle("Login", for: .normal)
         
         mainContainer.addArrangedSubview(horizontalContainer)
         mainContainer.addArrangedSubview(warningLabel)
         
+        mainContainer.addAtTopOf(parent: view, below: topBar)
+    }
+    
+    private func renderLogoutView() {
+        topBar.topItem?.title = "Log out from Github"
+        mainContainer.addArrangedSubview(loginButton)
+        loginButton.setTitle("Logout", for: .normal)
+        loginButton.contentEdgeInsets = UIEdgeInsets(top: 24, left: 12, bottom: 24, right: 12)
         mainContainer.addAtTopOf(parent: view, below: topBar)
     }
     
