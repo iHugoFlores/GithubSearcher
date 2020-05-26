@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit.UINavigationController
 
 class UserSearchViewModel {
 
@@ -203,5 +204,12 @@ class UserSearchViewModel {
     func displayAlertMessage(title: String, body: String, buttonMsg: String, callback: (() -> Void)? = nil) {
         guard let handler = presentAlertHandler else { return }
         handler(title, body, buttonMsg, callback)
+    }
+    
+    func navigateToLogin(navigationController: UINavigationController?) {
+        let loginViewModel = LoginViewModel(networkHandler: networkManager.networkHandler)
+        let newView = LoginView(viewModel: loginViewModel)
+        newView.isModalInPresentation = true
+        navigationController?.present(newView, animated: true, completion: nil)
     }
 }
