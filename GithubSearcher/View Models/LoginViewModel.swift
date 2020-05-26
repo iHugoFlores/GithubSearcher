@@ -14,12 +14,10 @@ class LoginViewModel {
     var presentAlertHandler: ((String, String, String, (() -> Void)?) -> Void)?
     var setActivityIndicatorHandler: ((Bool) -> Void)?
     var dismissHandler: (() -> Void)?
-
-    private var userName: String?
-    private var password: String?
     
     init(networkHandler: NetworkProtocol) {
         networkManager = NetworkManager(networkHandler: networkHandler)
+        
     }
     
     private var isDataDownloading: Bool = false {
@@ -30,6 +28,10 @@ class LoginViewModel {
     }
 
     func onButtonPressed(userName: String?, password: String?) {
+        if checkIfLoggedUserExists() {
+            eliminateStoredUser()
+            return
+        }
         guard let handler = presentAlertHandler else { return }
         guard let name = userName, let pass = password, !(name.isEmpty || pass.isEmpty) else {
             handler("Missing credentials", "Insert you user name and password to authenticate in Github", "On", nil)
@@ -58,12 +60,24 @@ class LoginViewModel {
             }
         }
     }
-    
+
+    private func eliminateStoredUser() {
+        let defaults = UserDefaults.standard
+        defaults.removeObject(forKey: Constants.UserDefaults.USER)
+        defaults.removeObject(forKey: Constants.UserDefaults.PASSWORD)
+        guard let handler = presentAlertHandler, let dismiss = dismissHandler else { return }
+        handler("Logged Out", "Your credentials have been deleted from the device", "Return", dismiss)
+    }
+
     private func onUserValidated(user: String, password: String) {
         let defaults = UserDefaults.standard
         defaults.set(user, forKey: Constants.UserDefaults.USER)
         defaults.set(password, forKey: Constants.UserDefaults.PASSWORD)
         guard let handler = presentAlertHandler, let dismiss = dismissHandler else { return }
         handler("Logged in", "You can now perform more requests", "Return", dismiss)
+    }
+    
+    func checkIfLoggedUserExists() -> Bool {
+        return UserDefaults.standard.string(forKey: Constants.UserDefaults.USER) != nil
     }
 }
