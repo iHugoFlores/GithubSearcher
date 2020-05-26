@@ -13,6 +13,11 @@ final class Constants {
         static let USER = "USER"
         static let PASSWORD = "PASSWORD"
     }
+    
+    final class Keychain {
+        static let account = "GITHUB_LOGIN"
+        static let service = "hfp.GITHUB_SEARCHER"
+    }
 
     static let isoDateFormatter: DateFormatter = {
         let formater = DateFormatter()
