@@ -29,6 +29,7 @@
 		F0FD3CC0247D5A6100BE3B15 /* LoginResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0FD3CBF247D5A6100BE3B15 /* LoginResponse.swift */; };
 		F0FD3CC2247D5D5D00BE3B15 /* SpinnerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0FD3CC1247D5D5D00BE3B15 /* SpinnerView.swift */; };
 		F0FD3CC4247D694200BE3B15 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0FD3CC3247D694200BE3B15 /* Constants.swift */; };
+		F0FD3CCD247DA66400BE3B15 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0FD3CCC247DA66400BE3B15 /* KeychainManager.swift */; };
 		F0FFCD4E2479A41B00FB8ECF /* UsersResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0FFCD4D2479A41B00FB8ECF /* UsersResponse.swift */; };
 		F0FFCD502479AD1800FB8ECF /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0FFCD4F2479AD1800FB8ECF /* User.swift */; };
 		F0FFCD522479AD2600FB8ECF /* UserDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0FFCD512479AD2600FB8ECF /* UserDetails.swift */; };
@@ -62,6 +63,7 @@
 		F0FD3CBF247D5A6100BE3B15 /* LoginResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginResponse.swift; sourceTree = "<group>"; };
 		F0FD3CC1247D5D5D00BE3B15 /* SpinnerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerView.swift; sourceTree = "<group>"; };
 		F0FD3CC3247D694200BE3B15 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		F0FD3CCC247DA66400BE3B15 /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
 		F0FFCD4D2479A41B00FB8ECF /* UsersResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersResponse.swift; sourceTree = "<group>"; };
 		F0FFCD4F2479AD1800FB8ECF /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		F0FFCD512479AD2600FB8ECF /* UserDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetails.swift; sourceTree = "<group>"; };
@@ -110,6 +112,7 @@
 			isa = PBXGroup;
 			children = (
 				F07840FD247B062100D46509 /* NetworkManager.swift */,
+				F0FD3CCC247DA66400BE3B15 /* KeychainManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -312,6 +315,7 @@
 				F0FFCD592479B0B800FB8ECF /* JSONUtil.swift in Sources */,
 				F08F18CB24786397005AA11A /* AppDelegate.swift in Sources */,
 				F061F6DF247C072A00C65616 /* RepositoryCell.swift in Sources */,
+				F0FD3CCD247DA66400BE3B15 /* KeychainManager.swift in Sources */,
 				F0FD3CBC247D4EED00BE3B15 /* RoundedTextField.swift in Sources */,
 				F0FFCD5D2479C95F00FB8ECF /* UserSearchViewModel.swift in Sources */,
 				F0FFCD5B2479C36A00FB8ECF /* UserSearchView.swift in Sources */,

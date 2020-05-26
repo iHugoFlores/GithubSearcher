@@ -13,7 +13,7 @@ Search for users and projects in Github
 - The list view shall not be paginated
 - Additionally, the search will automatically update upon each letter entered.
 
-## Second Screen. User Details
+### Second Screen. User Details
 
 - Tapping on a user will bring up a screen that contains the profile details of that user
 - The view should contain their **avatar image, username, number of followers, number of following, biography, email, location, join date, and a list of public repositories** with a **search bar** at the top
@@ -27,3 +27,9 @@ Search for users and projects in Github
 
 - XCode 11.4.1
 - Swift 5
+
+## References
+
+[Adding a Password to the Keychain](https://developer.apple.com/documentation/security/keychain_services/keychain_items/adding_a_password_to_the_keychain)
+
+[Searching for Keychain Items](https://developer.apple.com/documentation/security/keychain_services/keychain_items/searching_for_keychain_items)
