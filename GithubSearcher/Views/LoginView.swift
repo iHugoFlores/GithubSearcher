@@ -71,7 +71,7 @@ class LoginView: UIViewController {
         label.text = """
         - The app uses the deprecated Basic Authentication method. This service wil shut down on November 13, 2020 at 4:00 PM UTC
 
-        - The app handles the data inputed in the above fieds with NO ENCRYPTION. Use it at your own risk
+        - The app saves your credentials to authenticate to Github using KEYCHAIN.Use it at your own risk
         """
         return label
     }()
