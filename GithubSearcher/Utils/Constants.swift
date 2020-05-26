@@ -13,4 +13,17 @@ final class Constants {
         static let USER = "USER"
         static let PASSWORD = "PASSWORD"
     }
+
+    static let isoDateFormatter: DateFormatter = {
+        let formater = DateFormatter()
+        formater.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+        return formater
+    }()
+
+    static let dateFormatter: DateFormatter = {
+        let formater = DateFormatter()
+        formater.dateStyle = .medium
+        formater.timeStyle = .none
+        return formater
+    }()
 }
